@@ -267,3 +267,4 @@ poetry install
 
 
   [1]: ./doc/schema.svg
+poetry run pfb to -i ~/Downloads/export_2022-07-21T15_13_11.avro tsv

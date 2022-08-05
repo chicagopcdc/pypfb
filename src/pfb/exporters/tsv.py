@@ -38,7 +38,8 @@ def tsv(ctx, output):
 node_submitter_ids = {}
 
 
-def _to_tsv(reader, dir_path, handlers_by_name):
+def _to_tsv(reader, dir_path, handlers_by_name, exclude_files=None):
+    # exclude_files = ['program', 'project',]
     project_ids = []
     num_files = 0
 
@@ -76,6 +77,10 @@ def _to_tsv(reader, dir_path, handlers_by_name):
 
     for row in reader:
         name = row["name"]
+        print(name)
+        if name in exclude_files:
+            continue
+        print("after")
         record_id = row["id"]
         fields = fields_by_name[name]
 
