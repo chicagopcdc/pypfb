@@ -38,8 +38,9 @@ def tsv(ctx, output):
 node_submitter_ids = {}
 
 
-def _to_tsv(reader, dir_path, handlers_by_name, exclude_files=None):
+def _to_tsv(reader, dir_path, handlers_by_name, exclude_files=None, column_by_files=None):
     # exclude_files = ['program', 'project',]
+    # column_by_files["person"] = ['type', 'sex', ...]
     project_ids = []
     num_files = 0
 
@@ -77,10 +78,9 @@ def _to_tsv(reader, dir_path, handlers_by_name, exclude_files=None):
 
     for row in reader:
         name = row["name"]
-        print(name)
         if name in exclude_files:
             continue
-        print("after")
+
         record_id = row["id"]
         fields = fields_by_name[name]
 
@@ -123,7 +123,7 @@ def _to_tsv(reader, dir_path, handlers_by_name, exclude_files=None):
         # get the TSV writer for this row, create one if not created
         pair = handlers_by_name.get(name)
         if pair is None:
-            header_row = _make_header_row(fields)
+            header_row = _make_header_row(fields, column_by_files[name] if name in column_by_files and len(column_by_files[name]) > 0 else None)
             path = os.path.join(dir_path, name + ".tsv")
             click.secho("Creating ", fg="blue", err=True, nl=False)
             click.secho(path, fg="white", err=True)
@@ -138,6 +138,9 @@ def _to_tsv(reader, dir_path, handlers_by_name, exclude_files=None):
         # write data into TSV
         data_row = [name]
         for field in fields:
+            if name in column_by_files and len(column_by_files[name]) > 0 and field not in column_by_files[name]:
+                continue
+
             if field["name"] == "project_id":
                 project_ids.append([name, obj["project_id"]])
                 data_row.append(obj[field["name"]])
@@ -159,8 +162,11 @@ def _to_tsv(reader, dir_path, handlers_by_name, exclude_files=None):
     return num_files
 
 
-def _make_header_row(fields):
+def _make_header_row(fields, include_fields=None):
     header_row = ["type"]
     for field in fields:
+        if include_fields and field not in include_fields:
+            continue
+
         header_row.append(field["name"])
     return header_row
