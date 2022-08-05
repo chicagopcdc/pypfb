@@ -78,8 +78,6 @@ def _to_tsv(reader, dir_path, handlers_by_name, exclude_files=None, column_by_fi
 
     for row in reader:
         name = row["name"]
-        if name in exclude_files:
-            continue
 
         record_id = row["id"]
         fields = fields_by_name[name]
@@ -120,6 +118,9 @@ def _to_tsv(reader, dir_path, handlers_by_name, exclude_files=None, column_by_fi
         if "sample" in node_submitter_ids:
             print(node_submitter_ids["sample"])
 
+        if name in exclude_files:
+            continue
+            
         # get the TSV writer for this row, create one if not created
         pair = handlers_by_name.get(name)
         if pair is None:
@@ -164,8 +165,6 @@ def _to_tsv(reader, dir_path, handlers_by_name, exclude_files=None, column_by_fi
 
 def _make_header_row(fields, include_fields=None):
     header_row = ["type"]
-    print(include_fields)
-    print(fields)
     for field in fields:
         if include_fields and field["name"] not in include_fields:
             continue
