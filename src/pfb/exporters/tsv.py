@@ -138,7 +138,7 @@ def _to_tsv(reader, dir_path, handlers_by_name, exclude_files=None, column_by_fi
         # write data into TSV
         data_row = [name]
         for field in fields:
-            if name in column_by_files and len(column_by_files[name]) > 0 and field not in column_by_files[name]:
+            if name in column_by_files and len(column_by_files[name]) > 0 and field["name"] not in column_by_files[name]:
                 continue
 
             if field["name"] == "project_id":
@@ -167,7 +167,7 @@ def _make_header_row(fields, include_fields=None):
     print(include_fields)
     print(fields)
     for field in fields:
-        if include_fields and field not in include_fields:
+        if include_fields and field["name"] not in include_fields:
             continue
 
         header_row.append(field["name"])
