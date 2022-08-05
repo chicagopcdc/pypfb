@@ -164,6 +164,8 @@ def _to_tsv(reader, dir_path, handlers_by_name, exclude_files=None, column_by_fi
 
 def _make_header_row(fields, include_fields=None):
     header_row = ["type"]
+    print(include_fields)
+    print(fields)
     for field in fields:
         if include_fields and field not in include_fields:
             continue
