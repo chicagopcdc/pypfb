@@ -78,7 +78,6 @@ def _to_tsv(reader, dir_path, handlers_by_name, exclude_files=None, column_by_fi
 
     for row in reader:
         name = row["name"]
-
         record_id = row["id"]
         fields = fields_by_name[name]
 
@@ -120,7 +119,7 @@ def _to_tsv(reader, dir_path, handlers_by_name, exclude_files=None, column_by_fi
 
         if name in exclude_files:
             continue
-            
+
         # get the TSV writer for this row, create one if not created
         pair = handlers_by_name.get(name)
         if pair is None:
