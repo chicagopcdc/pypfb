@@ -117,7 +117,7 @@ def _to_tsv(reader, dir_path, handlers_by_name, exclude_files=None, column_by_fi
             print(node_submitter_ids["sample"])
 
         if exclude_files and name in exclude_files:
-            continue    
+            continue
 
         # get the TSV writer for this row, create one if not created
         pair = handlers_by_name.get(name)
