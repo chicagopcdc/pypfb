@@ -100,4 +100,14 @@ venv.bak/
 *.DS_Store
 Pipfile.lock
 
+
 tsvs
+
+# Jekyll
+docs/about/_site/
+docs/about/.sass-cache/
+docs/about/.jekyll-cache/
+docs/about/.jekyll-metadata
+docs/about/.bundle/
+docs/about/vendor/
+
