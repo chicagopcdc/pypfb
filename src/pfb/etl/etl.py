@@ -49,7 +49,7 @@ class ETL:
         with open(self.pfbfile, "rb") as fo:
             avro_reader = reader(fo)
             # skip schema
-            avro_reader.next()
+            next(avro_reader)
             # iterate each record
             for record in avro_reader:
                 self._process(record)
@@ -205,7 +205,7 @@ class ETL:
         i = 0
         for row in self.spanning_tree_rows:
             submission_json = {}
-            for (node_id, node_name) in row:
+            for node_id, node_name in row:
                 submission_json[node_name] = node_id
             await self.helper.insert_document("spanning_tree_index", submission_json, i)
             i += 1
