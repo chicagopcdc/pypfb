@@ -4,7 +4,7 @@ import json
 
 from ..cli import from_command
 
-_AVRO_TYPES = {"integer": "long", "number": "float", "int": "long"}
+_AVRO_TYPES = {"integer": "long", "number": "double", "int": "long"}
 
 
 @from_command.command(
@@ -20,13 +20,13 @@ def from_dict(ctx, url_or_path):
     """
     try:
         with ctx.obj["writer"] as writer:
-            _from_dict(writer, url_or_path)
+            write_from_dict(writer, url_or_path)
     except Exception:
         click.secho("Failed!", fg="red", bold=True, err=True)
         raise
 
 
-def _from_dict(writer, url_or_path):
+def write_from_dict(writer, url_or_path):
     if writer.isatty:
         click.secho("Error: cannot output to TTY.", fg="red", bold=True, err=True)
         return
@@ -239,13 +239,13 @@ def _get_avro_type(property_name, property_type, name):
             # this is for when a type is required in a dictionary and is an array type
             return _required_array_type(property_type)
         if property_type["type"] == ["array", "null"]:
-            return _array_type(property_type)
+            return _array_type(property_name, property_type, name)
         if "number" in property_type["type"]:
-            return ["null", "float"]
+            return ["null", "double"]
         if "int" in property_type["type"]:
             return ["null", "long"]
         if property_type["type"] == "number":
-            return "float"
+            return "double"
         if property_type["type"] == "integer":
             return "long"
         return _plain_type(property_type["type"])
@@ -267,15 +267,12 @@ def _required_array_type(property_type):
     return end_array_type
 
 
-def _array_type(property_type):
+def _array_type(property_name, property_type, object_name):
     if "enum" in property_type["items"]:
         enum = {}
         enum["type"] = "enum"
         enum["symbols"] = property_type["items"]["enum"]
-        if "description" in property_type:
-            enum["name"] = property_type["description"]
-        else:
-            enum["name"] = property_type["termDef"][0]["term"]
+        enum["name"] = f"{object_name}_{property_name}_anon_enum"
 
         array_type = {}
         array_type["type"] = "array"
@@ -295,7 +292,7 @@ def _array_type(property_type):
         else:
             # specific for midrc data dictionary
             if property_type["items"]["type"] == "number":
-                property_type["items"]["type"] = "float"
+                property_type["items"]["type"] = "double"
             # specific for jcoin data dictionary
             if property_type["items"]["type"] == "integer":
                 property_type["items"]["type"] = "long"
