@@ -3,7 +3,7 @@ import os
 import pytest
 from click.testing import CliRunner
 
-from pfb.cli import main
+from pfb_pcdc.cli import main
 
 
 @pytest.fixture

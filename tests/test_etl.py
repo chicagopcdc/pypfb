@@ -1,4 +1,4 @@
-from pfb.etl.etl import ETL
+from pfb_pcdc.etl.etl import ETL
 
 
 def test_etl():

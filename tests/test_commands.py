@@ -6,7 +6,7 @@ import shutil
 
 from fastavro import reader
 
-from pfb.base import decode_enum, encode_enum, str_hook
+from pfb_pcdc.base import decode_enum, encode_enum, str_hook
 
 
 def _test_schema(r):
